@@ -1,0 +1,380 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Djinni",
+	"keyEquivalent": "^~D",
+	"patterns": [
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#imports"
+		},
+		{
+			"include": "#definitions"
+		}
+	],
+	"repository": {
+		"imports": {
+			"patterns": [
+				{
+					"name": "meta.import.djinni",
+					"match": "^\\s*(@)(import)\\s*(\"[^\"]*\")",
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.meta.import.djinni"
+						},
+						"2": {
+							"name": "keyword.control.meta.import.djinni"
+						},
+						"3": {
+							"patterns": [
+								{
+									"include": "#strings"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"definitions": {
+			"name": "meta.type.djinni",
+			"begin": "(\\p{Alpha}\\w+)\\s*(=)\\s*(?=[^{]+{)",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.type.djinni"
+				}
+			},
+			"end": "(?!\\G)",
+			"patterns": [
+				{
+					"include": "#records"
+				},
+				{
+					"include": "#enums"
+				},
+				{
+					"include": "#interfaces"
+				}
+			]
+		},
+		"enums": {
+			"begin": "(enum)\\s+({)",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.enum.djinni"
+				},
+				"2": {
+					"name": "punctuation.definition.enum.begin.djinni"
+				}
+			},
+			"end": "}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.enum.end.djinni"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"match": "(\\p{Alpha}\\w*);",
+					"captures": {
+						"1": {
+							"name": "entity.name.enum.djinni"
+						}
+					}
+				}
+			]
+		},
+		"records": {
+			"begin": "(record)\\s+([+a-z ]*)({)",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.record.djinni"
+				},
+				"2": {
+					"patterns": [{
+						"include": "#generators"
+					}]
+				},
+				"3": {
+					"name": "punctuation.definition.record.begin.djinni"
+				}
+			},
+			"end": "}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.record.end.djinni"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#constMember"
+				},
+				{
+					"include": "#recordMember"
+				}
+			]
+		},
+		"interfaces": {
+			"begin": "(interface)\\s+([+a-z ]*)({)",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.interface.djinni"
+				},
+				"2": {
+					"patterns": [{
+						"include": "#generators"
+					}]
+				},
+				"3": {
+					"name": "punctuation.definition.interface.begin.djinni"
+				}
+			},
+			"end": "}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.interface.end.djinni"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#constMember"
+				},
+				{
+					"include": "#interfaceMember"
+				}
+			]
+		},
+		"constMember": {
+			"patterns": [
+				{
+					"name": "meta.member.record.djinni",
+					"begin": "(const)\\s+(\\p{Alpha}\\w*)\\s*(:)\\s*([^=]+)(=)",
+					"end": ";",
+					"captures": {
+						"1": {
+							"name": "storage.modifier.member.record.djinni"
+						},
+						"2": {
+							"name": "variable.member.record.djinni"
+						},
+						"4": {
+							"patterns": [
+								{
+									"include": "#predefinedTypes"
+								}
+							]
+						}
+					},
+					"patterns": [
+						{
+							"include": "#constValue"
+						}
+					]
+				}
+			]
+		},
+		"constValue": {
+			"patterns": [
+				{
+					"include": "#constRecord"
+				},
+				{
+					"include": "#strings"
+				},
+				{
+					"include": "#numbers"
+				},
+				{
+					"include": "#booleans"
+				}
+			]
+		},
+		"constRecord": {
+			"begin": "{",
+			"end": "}",
+			"name": "meta.block.const.record.djinni",
+			"patterns": [
+				{
+					"match": "(?m)(\\p{Alpha}\\w*)\\s*=\\s*(.*)(,)?",
+					"captures": {
+						"1": {
+							"name": "variable.member.record.djinni"
+						},
+						"2": { 
+							"patterns": [
+								{
+									"include": "#constValue"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"recordMember": {
+			"patterns": [
+				{
+					"name": "meta.member.record.djinni",
+					"match": "(\\p{Alpha}\\w*)\\s*(:)\\s*([^;]*);",
+					"captures": {
+						"1": {
+							"name": "variable.member.record.djinni"
+						},
+						"3": {
+							"patterns": [
+								{
+									"include": "#predefinedTypes"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"interfaceMember": {
+			"patterns": [
+				{
+					"name": "meta.member.interface.djinni",
+					"match": "(?mx) (static)? \\s+ (\\p{Alpha}\\w*) \\s* (\\() ([^)]*) (\\)) \\s* (?:(:)(?:\\s*)([^;]*))? \\s* ;",
+					"captures": {
+						"1": {
+							"name": "storage.modifier.djinni"
+						},
+						"2": {
+							"name": "entity.name.function.djinni"
+						},
+						"4": {
+							"patterns": [
+								{
+									"include": "#interfaceFunctionParameter"
+								}
+							]
+						},
+						"7": {
+							"patterns": [
+								{ 
+									"include": "#predefinedTypes"
+								}
+							]
+						}
+					}
+				}	
+			]
+		},
+		"interfaceFunctionParameter": {
+			"patterns": [
+				{
+					"name": "meta.function.parameter.djinni",
+					"match": "(\\p{Alpha}\\w*)\\s*(:)\\s*([^;]*),?",
+					"captures": {
+						"1": {
+							"name": "variable.parameter.djinni"
+						},
+						"3": {
+							"patterns": [
+								{
+									"include": "#predefinedTypes"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"generators": {
+			"patterns": [
+				{
+					"match": "(\\+)([cjox]{1})",
+					"captures": {
+						"1": {
+							"name": "punctuation.storage.modifier.generator.djinni"
+						},
+						"2": {
+							"name": "storage.modifier.generator.djinni"
+						}
+					},
+					"name": "meta.storage.modifier.generator.djinni"	
+				}
+			]
+		},
+		"predefinedTypes": {
+			"patterns": [{
+				"name": "storage.type.djinni",
+				"match": "\\b(list|map|set|string|optional|bool|binary|date|i8|i16|i32|i64|f32|f64)\\b"
+			}]
+		},
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.djinni",
+				"match": "\\b(interface|record|enum|const|map|set|string|optional|i8|i16|i32|i64|f32|f64|binary|date|deriving|eq|ord|bool|list)\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.djinni",
+			"begin": "\"",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.djinni"
+				}
+			},
+			"end": "\"",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.djinni"
+				}
+			},
+			"patterns": [
+				{
+					"name": "constant.character.escape.djinni",
+					"match": "\\\\."
+				}
+			]
+		},
+		"numbers": {
+			"patterns": [
+				{
+					"match": "\\d+(\\.\\d*)?|\\.\\d+",
+					"name": "constant.numeric"
+				}
+			]
+		},
+		"booleans": {
+			"patterns": [{
+				"name": "constant.language.djinni",
+				"match": "\\b(true|false)\\b"
+			}]
+		},
+		"comments": {
+			"begin": "(^[ \\t]+)?(?<!\\S)(?=#)(?!#\\{)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.whitespace.comment.leading.djinni"
+				}
+			},
+			"end": "(?!\\G)",
+			"patterns": [
+				{
+					"begin": "#",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.djinni"
+						}
+					},
+					"end": "\\n",
+					"name": "comment.line.number-sign.djinni"
+				}
+			]
+		}
+	},
+	"scopeName": "source.djinni"
+}

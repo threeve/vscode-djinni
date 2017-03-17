@@ -1,0 +1,26 @@
+{
+    "name": "vscode-djinni",
+    "displayName": "Djinni",
+    "description": "Support for Djinni IDL files.",
+    "version": "0.0.1",
+    "publisher": "jafo",
+    "engines": {
+        "vscode": "^1.10.0"
+    },
+    "categories": [
+        "Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "djinni",
+            "aliases": ["Djinni", "djinni"],
+            "extensions": ["djinni"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "djinni",
+            "scopeName": "source.djinni",
+            "path": "./syntaxes/djinni.json"
+        }]
+    }
+}
