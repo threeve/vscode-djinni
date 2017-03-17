@@ -1,14 +1,14 @@
 {
     "name": "vscode-djinni",
     "displayName": "Djinni",
-    "description": "Support for Djinni IDL files.",
-    "version": "0.0.1",
+    "description": "Djinni extension for Visual Studio Code.",
+    "version": "0.2.0",
     "publisher": "jafo",
     "engines": {
         "vscode": "^1.10.0"
     },
     "categories": [
-        "Languages"
+        "Languages", "Snippets"
     ],
     "contributes": {
         "languages": [{
@@ -21,6 +21,10 @@
             "language": "djinni",
             "scopeName": "source.djinni",
             "path": "./syntaxes/djinni.json"
+        }],
+        "snippets": [{
+            "language": "djinni",
+            "path": "./snippets/djinni.json"
         }]
     }
 }

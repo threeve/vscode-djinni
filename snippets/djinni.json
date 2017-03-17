@@ -1,0 +1,29 @@
+{
+    "enum": {
+        "prefix": "enum",
+        "description": "Enum definition",
+        "body": [
+            "${1:foo} = enum {",
+            "\t$0",
+            "}"
+        ]
+    },
+    "interface": {
+        "prefix": "interface",
+        "description": "Interface definition",
+        "body": [
+            "${1:foo} = interface ${2:+c} {",
+            "\t$0",
+            "}"
+        ]
+    },
+    "record": {
+        "prefix": "record",
+        "description": "Record definition",
+        "body": [
+            "${1:foo} = record {",
+            "\t$0",
+            "}"
+        ]
+    }
+}
